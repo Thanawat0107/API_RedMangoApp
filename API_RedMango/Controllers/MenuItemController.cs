@@ -36,6 +36,7 @@ namespace API_RedMango.Controllers
             if (id == 0)
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
                 return BadRequest(_response);
             }
 
@@ -44,6 +45,7 @@ namespace API_RedMango.Controllers
             if (menuItem == null)
             {
                 _response.StatusCode = HttpStatusCode.NotFound;
+                _response.IsSuccess = false;
                 return NotFound(_response);
             }
 
@@ -61,6 +63,8 @@ namespace API_RedMango.Controllers
                 {
                     if (menuItemCreateDTO.File == null || menuItemCreateDTO.File.Length == 0)
                     {
+                        _response.StatusCode = HttpStatusCode.BadRequest;
+                        _response.IsSuccess = false;
                         return BadRequest();
                     }
 
@@ -116,6 +120,8 @@ namespace API_RedMango.Controllers
                 {
                     if (menuItemUpdateDTO == null || id != menuItemUpdateDTO.Id)
                     {
+                        _response.StatusCode = HttpStatusCode.BadRequest;
+                        _response.IsSuccess = false;
                         return BadRequest();
                     }
 
@@ -125,6 +131,8 @@ namespace API_RedMango.Controllers
 
                     if (menuItemFromDb == null)
                     {
+                        _response.StatusCode = HttpStatusCode.BadRequest;
+                        _response.IsSuccess = false;
                         return BadRequest();
                     }
 
@@ -175,6 +183,8 @@ namespace API_RedMango.Controllers
             {
                 if (id == 0)
                 {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
                     return BadRequest();
                 }
 
@@ -184,6 +194,8 @@ namespace API_RedMango.Controllers
 
                 if (menuItemFromDb == null)
                 {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
                     return BadRequest();
                 }
 
