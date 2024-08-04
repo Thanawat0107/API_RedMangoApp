@@ -1,5 +1,7 @@
 using API_RedMango.Data;
 using API_RedMango.Models;
+using API_RedMango.Services.IServices;
+using API_RedMango.Services;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddScoped<IFileUpload, FileUpload>();
+
 
 var app = builder.Build();
 
