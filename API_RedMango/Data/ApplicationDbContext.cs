@@ -16,6 +16,7 @@ namespace API_RedMango.Data
             optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=TestRedMangoDB;TrustServerCertificate=True;Trusted_Connection=True;");
         }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<MenuItem> MenuItems { get; set; }
 
     }
 }
