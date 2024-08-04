@@ -1,5 +1,7 @@
 ﻿using API_RedMango.Data;
 using API_RedMango.Models;
+using API_RedMango.Models.Dto;
+using API_RedMango.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -11,10 +13,12 @@ namespace API_RedMango.Controllers
     public class MenuItemController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
+        private readonly IFileUpload _fileUpload;
         private ApiResponse _response;
-        public MenuItemController(ApplicationDbContext db)
+        public MenuItemController(ApplicationDbContext db, IFileUpload fileUpload)
         {
             _db = db;
+            _fileUpload = fileUpload;
             _response = new ApiResponse();
         }
 
@@ -26,7 +30,7 @@ namespace API_RedMango.Controllers
             return Ok(_response);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetMenuItem")]
         public async Task<IActionResult> GetMenuItem(int id)
         {
             if (id == 0)
@@ -47,5 +51,61 @@ namespace API_RedMango.Controllers
             _response.StatusCode = HttpStatusCode.OK;
             return Ok(_response);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<ApiResponse>> CreateMenuItem([FromForm] MenuItemCreateDTO menuItemCreateDTO)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (menuItemCreateDTO.File == null || menuItemCreateDTO.File.Length == 0)
+                    {
+                        return BadRequest();
+                    }
+
+
+                    string fileName = await _fileUpload.UploadFile(menuItemCreateDTO.File);
+
+
+                    MenuItem menuItemToCreate = new()
+                    {
+                        Name = menuItemCreateDTO.Name,
+                        Price = menuItemCreateDTO.Price,
+                        Category = menuItemCreateDTO.Category,
+                        SpecialTag = menuItemCreateDTO.SpecialTag,
+                        Description = menuItemCreateDTO.Description,
+                        Image = fileName,
+                    };
+
+
+                    _db.MenuItems.Add(menuItemToCreate);
+                    await _db.SaveChangesAsync();
+
+
+                    _response.Result = menuItemToCreate;
+                    _response.StatusCode = HttpStatusCode.Created;
+
+
+                    return CreatedAtRoute("GetMenuItem", new { id = menuItemToCreate.Id }, _response);
+
+
+                }
+                else
+                {
+                    _response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages
+                     = new List<string>() { ex.ToString() };
+            }
+
+
+            return _response;
+        }
+
     }
 }
