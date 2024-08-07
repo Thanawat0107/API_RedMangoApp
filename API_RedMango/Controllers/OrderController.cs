@@ -1,5 +1,7 @@
 ﻿using API_RedMango.Data;
 using API_RedMango.Models;
+using API_RedMango.Models.Dto;
+using API_RedMango.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -79,6 +81,58 @@ namespace API_RedMango.Controllers
             {
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return _response;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ApiResponse>> CreateOrder([FromBody] OrderHeaderCreateDTO orderHeaderDTO)
+        {
+            try
+            {
+                OrderHeader order = new()
+                {
+                    ApplicationUserId = orderHeaderDTO.ApplicationUserId,
+                    PickupEmail = orderHeaderDTO.PickupEmail,
+                    PickupName = orderHeaderDTO.PickupName,
+                    PickupPhoneNumber = orderHeaderDTO.PickupPhoneNumber,
+                    OrderTotal = orderHeaderDTO.OrderTotal,
+                    OrderDate = DateTime.Now,
+                    StripePaymentIntentID = orderHeaderDTO.StripePaymentIntentID,
+                    TotalItems = orderHeaderDTO.TotalItems,
+                    Status = String.IsNullOrEmpty(orderHeaderDTO.Status) ? SD.status_pending : orderHeaderDTO.Status,
+                };
+
+                if (ModelState.IsValid)
+                {
+                    _db.OrderHeaders.Add(order);
+                    _db.SaveChanges();
+
+                    foreach (var orderDetailDTO in orderHeaderDTO.OrderDetailsDTO)
+                    {
+                        OrderDetails orderDetails = new()
+                        {
+                            OrderHeaderId = order.OrderHeaderId,
+                            ItemName = orderDetailDTO.ItemName,
+                            MenuItemId = orderDetailDTO.MenuItemId,
+                            Price = orderDetailDTO.Price,
+                            Quantity = orderDetailDTO.Quantity,
+                        };
+                        _db.OrderDetails.Add(orderDetails);
+                    }
+
+                    _db.SaveChanges();
+                    _response.Result = order;
+                    order.OrderDetails = null;
+                    _response.StatusCode = HttpStatusCode.Created;
+                    return Ok(_response);
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages
+                     = new List<string>() { ex.ToString() };
             }
             return _response;
         }
