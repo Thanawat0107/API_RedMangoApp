@@ -1,4 +1,4 @@
-import { menuItemModel } from "../../../Interfaces";
+import { menuItemModel } from "../../../models";
 import { baseUrl } from "../../../Common/SD";
 import { Link } from "react-router-dom";
 

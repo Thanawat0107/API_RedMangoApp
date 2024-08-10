@@ -1,26 +1,32 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { menuItemModel } from "../../../models";
 import MenuItemCard from "./MenuItemCard";
+import { useGetMenuItemsQuery } from "../../../Apis/menuItemApi";
+import { useDispatch } from "react-redux";
+import { setMenuItem } from "../../../Redux/slice/menuItemSlice";
 
-type Props = {};
-
-export default function MenuItemList({}: Props) {
-  const [menuItems, setMenuItems] = useState<menuItemModel[]>([]);
+function MenuItemList() {
+  const dispatch = useDispatch();
+  const { data, isLoading } = useGetMenuItemsQuery(null);
 
   useEffect(() => {
-    fetch("http://localhost:5055/api/MenuItem")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setMenuItems(data.result);
-      });
-  }, []);
+    if (!isLoading) {
+      dispatch(setMenuItem(data.result));
+    }
+  }, [isLoading]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container row">
-      {menuItems.length > 0 && menuItems.map((menuItem, index) => (
+      {data.result.length > 0 &&
+        data.result.map((menuItem: menuItemModel, index: number) => (
           <MenuItemCard menuItem={menuItem} key={index} />
         ))}
     </div>
   );
 }
+
+export default MenuItemList;
