@@ -4,7 +4,7 @@ import { useGetMenuItemByIdQuery } from "../Apis/menuItemApi";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../Common/SD";
 import { useUpdateShoppingCartMutation } from "../Apis/shoppingCartApi";
-import { MainLoader } from "../Common";
+import { MainLoader, MiniLoader } from "../Common";
 
 
 // user id : f56f1d99-40fa-427c-a505-b7b85b0b84a9
@@ -38,7 +38,7 @@ export default function MenuItemDetails() {
 
     console.log(response);
 
-    setIsAddingToCart(false);
+    setTimeout(()=>setIsAddingToCart(false),500);
   };
 
   return (
@@ -89,12 +89,18 @@ export default function MenuItemDetails() {
             </span>
             <div className="row pt-4">
               <div className="col-5">
-                <button
-                  className="btn btn-success form-control"
-                  onClick={() => handleAddToCart(data.result?.id)}
-                >
-                  Add to Cart
-                </button>
+              {isAddingToCart ? (
+                  <button disabled className="btn btn-success form-control">
+                    <MiniLoader />
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-success form-control"
+                    onClick={() => handleAddToCart(data.result?.id)}
+                  >
+                    Add to Cart
+                  </button>
+                )}
               </div>
 
               <div className="col-5 ">
