@@ -1,9 +1,19 @@
-import React from 'react'
+import React from "react";
+import { menuItemModel } from "../../../models";
 
-type Props = {}
+type Props = {
+  menuItem: menuItemModel;
+};
 
-export default function MenuItemCard({}: Props) {
+export default function MenuItemCard({ menuItem }: Props) {
   return (
-    <div>MenuItemCard</div>
-  )
+    <>
+      <div>{menuItem.id}</div>
+      <div>{menuItem.name}</div>
+      <div>{menuItem.price}</div>
+      <div>{menuItem.description}</div>
+      <div>{menuItem.category}</div>
+      <img>{menuItem.image}</img>
+    </>
+  );
 }
