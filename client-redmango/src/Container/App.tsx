@@ -1,7 +1,12 @@
-import React from 'react'
+import React from "react";
+import { Footer, Header } from "../Components/Layout";
 
 export default function App() {
   return (
-    <div className='text-success'>App</div>
-  )
+    <div>
+      <Header />
+      Main Component
+      <Footer />
+    </div>
+  );
 }
