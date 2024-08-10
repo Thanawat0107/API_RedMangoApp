@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { cartItemModel } from "../../../models";
 import { RootState } from "../../../Redux/store";
+import { inputHelper } from "../../../Helper";
+import { MiniLoader } from "../../../Common";
 
 export default function CartPickUpDetails() {
+    const [loading, setLoading] = useState(false);
   const shoppingCartFromStore: cartItemModel[] = useSelector(
     (state: RootState) => state.shoppingCartStore.cartItems ?? []
   );
@@ -15,13 +19,30 @@ export default function CartPickUpDetails() {
     return null;
   });
 
+  const initialUserData = {
+    name: "",
+    email: "",
+    phoneNumber: "",
+  };
+
+  const [userInput, setUserInput] = useState(initialUserData);
+  const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const tempData = inputHelper(e, userInput);
+    setUserInput(tempData);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+  };
+
   return (
     <div className="border pb-5 pt-3">
       <h1 style={{ fontWeight: "300" }} className="text-center text-success">
         Pickup Details
       </h1>
       <hr />
-      <form className="col-10 mx-auto">
+      <form className="col-10 mx-auto" onSubmit={handleSubmit}>
         <div className="form-group mt-3">
           Pickup Name
           <input
@@ -30,6 +51,8 @@ export default function CartPickUpDetails() {
             placeholder="name..."
             name="name"
             required
+            value={userInput.name}
+            onChange={handleUserInput}
           />
         </div>
         <div className="form-group mt-3">
@@ -40,6 +63,8 @@ export default function CartPickUpDetails() {
             placeholder="email..."
             name="email"
             required
+            value={userInput.email}
+            onChange={handleUserInput}
           />
         </div>
 
@@ -51,6 +76,8 @@ export default function CartPickUpDetails() {
             placeholder="phone number..."
             name="phoneNumber"
             required
+            value={userInput.phoneNumber}
+            onChange={handleUserInput}
           />
         </div>
         <div className="form-group mt-3">
@@ -63,7 +90,7 @@ export default function CartPickUpDetails() {
           type="submit"
           className="btn btn-lg btn-success form-control mt-3"
         >
-          Looks Good? Place Order!
+          {loading ? <MiniLoader/> : "Looks Good? Place Order!"}
         </button>
       </form>
     </div>
