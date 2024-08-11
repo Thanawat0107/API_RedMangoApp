@@ -1,13 +1,26 @@
 import React from 'react'
 import { useLocation } from "react-router-dom";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { PaymentForm } from "../Components/Page/Payment";
+
+const stripePromise = loadStripe(
+  "pk_test_51P8zpLIwR8EpO71EF784dHKiY8YSwkizYywbXJq44oscWJXL3rqGHa8saQqKOEcTFBgr239jrKs8fjDxRbSDGQln00qbf0eLG5"
+);
 
 export default function Payment() {
   const {
     state: { apiResult, userInput },
   } = useLocation();
 
-  console.log(apiResult);
-  console.log(userInput);
+  const options = {
+    // passing the client secret obtained from the server
+    clientSecret: apiResult.clientSecret,
+  };
 
-  return <div>Payment</div>;
+  return (
+    <Elements stripe={stripePromise} options={options}>
+      <PaymentForm />
+    </Elements>
+  );
 }
