@@ -5,8 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../Common/SD";
 import { useUpdateShoppingCartMutation } from "../Apis/shoppingCartApi";
 import { MainLoader, MiniLoader } from "../Common";
-import { apiResponse } from "../models";
+import { apiResponse, userModel } from "../models";
 import { toastNotify } from "../Helper";
+import { RootState } from "../Redux/store";
+import { useSelector } from "react-redux";
 
 // user id : f56f1d99-40fa-427c-a505-b7b85b0b84a9
 
@@ -18,6 +20,10 @@ export default function MenuItemDetails() {
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
   const [updateShoppingCart] = useUpdateShoppingCartMutation();
+  
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
+  );
 
   const handleQuantity = (counter: number) => {
     let newQuantity = quantity + counter;
