@@ -1,7 +1,7 @@
-import React from 'react'
+import { withAuth } from "../HOC";
 
-export default function AuthenticationTest() {
-  return (
-    <div>AuthenticationTest</div>
-  )
+function AuthenticationTest() {
+  return <div>This page can be accessed by any logged in user</div>;
 }
+
+export default withAuth(AuthenticationTest);
