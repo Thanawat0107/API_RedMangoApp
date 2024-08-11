@@ -2,19 +2,20 @@ import { Footer, Header } from "../Components/Layout";
 import { Home, MenuItemDetails, NotFound, ShoppingCart, Login, Register,  AccessDenied, AuthenticationTest, AuthenticationTestAdmin, } from "../Pages";
 import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useGetShoppingCartQuery } from "../Apis/shoppingCartApi";
 import { setShoppingCart } from "../Redux/slice/shoppingCartSlice";
 import { userModel } from "../models";
 import { jwtDecode } from "jwt-decode";
 import { setLoggedInUser } from "../Redux/slice/userAuthSlice";
+import { RootState } from "../Redux/store";
 
 function App() {
   const dispatch = useDispatch();
 
-  const { data, isLoading } = useGetShoppingCartQuery(
-    "f56f1d99-40fa-427c-a505-b7b85b0b84a9"
-  );
+  const userData = useSelector((state: RootState) => state.userAuthStore);
+
+  const { data, isLoading } = useGetShoppingCartQuery(userData.id);
 
   useEffect(() => {
     if (!isLoading) {

@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { cartItemModel } from "../../../models";
+import { cartItemModel, userModel } from "../../../models";
 import { RootState } from "../../../Redux/store";
 import { removeFromCart, updateQuantity } from "../../../Redux/slice/shoppingCartSlice";
 import { useUpdateShoppingCartMutation } from "../../../Apis/shoppingCartApi";
@@ -9,6 +9,10 @@ function CartSummary() {
   const [updateShoppingCart] = useUpdateShoppingCartMutation();
   const shoppingCartFromStore: cartItemModel[] = useSelector(
     (state: RootState) => state.shoppingCartStore.cartItems ?? []
+  );
+
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
   );
 
   if (!shoppingCartFromStore) {
@@ -29,7 +33,7 @@ function CartSummary() {
       updateShoppingCart({
         menuItemId: cartItem.menuItem?.id,
         updateQuantityBy: 0,
-        userId: "94bb0b08-462f-4a95-8545-940b187588f2",
+        userId: userData.id,
       });
 
       //ปรับปรุง State
@@ -39,7 +43,7 @@ function CartSummary() {
       updateShoppingCart({
         menuItemId: cartItem.menuItem?.id,
         updateQuantityBy: updateQuantityBy,
-        userId: "94bb0b08-462f-4a95-8545-940b187588f2",
+        userId: userData.id,
       });
       dispatch(
         updateQuantity({

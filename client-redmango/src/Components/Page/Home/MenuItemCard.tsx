@@ -32,7 +32,7 @@ function MenuItemCard(props: Props) {
     const response: apiResponse = await updateShoppingCart({
       menuItemId: menuItemId,
       updateQuantityBy: 1,
-      userId: "f56f1d99-40fa-427c-a505-b7b85b0b84a9",
+      userId: userData.id,
     });
 
     if (response.data && response.data.isSuccess) {
