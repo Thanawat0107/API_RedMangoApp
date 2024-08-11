@@ -1,5 +1,5 @@
 import { Footer, Header } from "../Components/Layout";
-import { Home, MenuItemDetails, NotFound, ShoppingCart, Login, Register } from "../Pages";
+import { Home, MenuItemDetails, NotFound, ShoppingCart, Login, Register,  AccessDenied, AuthenticationTest, AuthenticationTestAdmin, } from "../Pages";
 import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -44,6 +44,15 @@ function App() {
           <Route path="/shoppingCart" element={<ShoppingCart />}></Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route
+            path="/authentication"
+            element={<AuthenticationTest />}
+          ></Route>
+          <Route
+            path="/authorization"
+            element={<AuthenticationTestAdmin />}
+          ></Route>
+          <Route path="/accessDenied" element={<AccessDenied />} />
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </div>

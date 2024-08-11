@@ -3,22 +3,24 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { cartItemModel, userModel } from "../../models";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
-import { setLoggedInUser, emptyUserState } from "../../Redux/slice/userAuthSlice";
+import { emptyUserState, setLoggedInUser } from "../../Redux/slice/userAuthSlice";
 
 function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const shoppingCartFromStore: cartItemModel[] = useSelector(
-    (state: RootState) => state.shoppingCartStore.cartItems ?? []);
-    
-  const userData: userModel = useSelector(
-    (state: RootState) => state.userAuthStore);
+    (state: RootState) => state.shoppingCartStore.cartItems ?? []
+  );
 
-    const handleLogout = () => {
-      localStorage.removeItem("token");
-      dispatch(setLoggedInUser({ ...emptyUserState }));
-      navigate("/");
-    };
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
+  );
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(setLoggedInUser({ ...emptyUserState }));
+    navigate("/");
+  };
 
   return (
     <div>
@@ -39,7 +41,7 @@ function Header() {
             <span className="navbar-toggler-icon" />
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0 w-100">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0 w-100">
               <li className="nav-item">
                 <NavLink className="nav-link" aria-current="page" to="/">
                   Home
@@ -57,6 +59,26 @@ function Header() {
                     : ""}
                 </NavLink>
               </li>
+
+              <li className="nav-item">
+                <NavLink
+                  className="nav-link"
+                  aria-current="page"
+                  to="/authentication"
+                >
+                  Authentication
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink
+                  className="nav-link"
+                  aria-current="page"
+                  to="/authorization"
+                >
+                  Authorization
+                </NavLink>
+              </li>
+
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -88,9 +110,9 @@ function Header() {
                   </li>
                 </ul>
               </li>
-              
+
               <div className="d-flex" style={{ marginLeft: "auto" }}>
-                  {userData.id && (
+                {userData.id && (
                   <>
                     <li className="nav-item">
                       <button
