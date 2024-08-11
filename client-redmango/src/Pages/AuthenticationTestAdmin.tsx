@@ -1,7 +1,9 @@
-import React from 'react'
+import { withAdminAuth } from "../HOC";
 
-export default function AuthenticationTestAdmin() {
+function AuthenticationTestAdmin() {
   return (
     <div>This page can only be accessed if role of logged in user is ADMIN</div>
-  )
+  );
 }
+
+export default withAdminAuth(AuthenticationTestAdmin);
