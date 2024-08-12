@@ -51,8 +51,6 @@ export default function CartPickUpDetails() {
     const { data }: apiResponse = await initiatePayment(userData.id);
     const orderSummary = { grandTotal, totalItems };
 
-    console.log(data)
-
     navigate("/payment", {
       state: { apiResult: data?.result, userInput },
     });
