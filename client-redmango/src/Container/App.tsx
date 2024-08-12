@@ -11,6 +11,7 @@ import {
   AuthenticationTest,
   AuthenticationTestAdmin,
   OrderConfirmed,
+  MyOrders,
 } from "../Pages";
 import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
@@ -72,6 +73,7 @@ function App() {
             path="order/orderconfirmed/:id"
             element={<OrderConfirmed />}
           ></Route>
+          <Route path="/order/myOrders" element={<MyOrders />} />
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </div>
