@@ -10,6 +10,7 @@ import {
   AccessDenied,
   AuthenticationTest,
   AuthenticationTestAdmin,
+  OrderConfirmed,
 } from "../Pages";
 import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
@@ -20,6 +21,7 @@ import { userModel } from "../models";
 import { jwtDecode } from "jwt-decode";
 import { setLoggedInUser } from "../Redux/slice/userAuthSlice";
 import { RootState } from "../Redux/store";
+
 
 function App() {
   const dispatch = useDispatch();
@@ -66,6 +68,10 @@ function App() {
           ></Route>
           <Route path="/accessDenied" element={<AccessDenied />} />
           <Route path="/payment" element={<Payment />} />
+          <Route
+            path="order/orderconfirmed/:id"
+            element={<OrderConfirmed />}
+          ></Route>
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </div>

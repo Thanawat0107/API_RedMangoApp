@@ -98,7 +98,7 @@ const PaymentForm = ({ data, userInput }: orderSummaryProps) => {
       if (response) {
         if (response.data?.result.status === SD_Status.CONFIRMED) {
           navigate(
-            `/order/orderConfirmed/${response.data.result.orderHeaderId}}`
+            `/order/orderConfirmed/${response.data.result.orderHeaderId}`
           );
         } else {
           navigate("/failed");
@@ -112,7 +112,14 @@ const PaymentForm = ({ data, userInput }: orderSummaryProps) => {
   return (
     <form onSubmit={handleSubmit}>
       <PaymentElement />
-      <button className="btn btn-success mt-2 w-100">Submit</button>
+      <button
+        disabled={!stripe || isProcessing}
+        className="btn btn-success mt-2 w-100"
+      >
+        <span id="button-text">
+          {isProcessing ? "Processing ... " : "Submit Order"}
+        </span>
+      </button>
     </form>
   );
 };
