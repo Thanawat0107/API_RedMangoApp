@@ -25,7 +25,7 @@ namespace API_RedMango.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMenuItems()
         {
-            _response.Result = _db.MenuItems;
+            _response.Result = _db.MenuItems.OrderByDescending(p=>p.Id);
             _response.StatusCode = HttpStatusCode.OK;
             return Ok(_response);
         }
@@ -49,7 +49,7 @@ namespace API_RedMango.Controllers
                 return NotFound(_response);
             }
 
-            _response.Result = _db.MenuItems.OrderByDescending(p => p.Id);
+            _response.Result = menuItem;
             _response.StatusCode = HttpStatusCode.OK;
             return Ok(_response);
         }

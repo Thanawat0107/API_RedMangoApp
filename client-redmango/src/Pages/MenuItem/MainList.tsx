@@ -1,5 +1,5 @@
 import { useGetMenuItemsQuery } from "../../Apis/menuItemApi";
-import { menuItemModel } from "../../models";
+import { menuItemModel } from "../../Interfaces";
 import { MainLoader } from "../../Common";
 import { baseUrl } from "../../Common/SD";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 function MainList() {
   const { data, isLoading } = useGetMenuItemsQuery(null);
   const navigate = useNavigate();
+
   return (
     <>
       {isLoading && <MainLoader />}
@@ -49,15 +50,15 @@ function MainList() {
                   <div className="col-2">{menuItem.specialTag}</div>
                   <div className="col-2">
                     <button className="btn btn-success">
-                      <i className="bi bi-pencil-fill"></i>
-                    </button>
-                    <button className="btn btn-danger mx-2">
-                    <i
+                      <i
                         className="bi bi-pencil-fill"
                         onClick={() =>
                           navigate("/menuitem/menuitemupsert/" + menuItem.id)
                         }
                       ></i>
+                    </button>
+                    <button className="btn btn-danger mx-2">
+                      <i className="bi bi-trash-fill"></i>
                     </button>
                   </div>
                 </div>

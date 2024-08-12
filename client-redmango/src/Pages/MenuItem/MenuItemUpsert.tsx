@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect ,useState } from "react";
 import { inputHelper, toastNotify } from "../../Helper";
-import { useCreateMenuItemMutation, useGetMenuItemByIdQuery, useUpdateMenuItemMutation } from "../../Apis/menuItemApi";
-import { useNavigate, useParams  } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MainLoader } from "../../Common";
 import { baseUrl } from "../../Common/SD";
+import { 
+  useCreateMenuItemMutation,
+  useGetMenuItemByIdQuery, 
+  useUpdateMenuItemMutation } from "../../Apis/menuItemApi";
 
 const menuItemData = {
   name: "",
@@ -21,8 +24,7 @@ function MenuItemUpsert() {
   const [createMenuItem] = useCreateMenuItemMutation();
   const [imageToStore, setImageToStore] = useState<any>();
   const [imageToDisplay, setimageToDisplay] = useState<string>("");
-  const [menuItemInputs, setMenuItemInputs] = useState(menuItemData);''
-
+  const [menuItemInputs, setMenuItemInputs] = useState(menuItemData);
   const { data } = useGetMenuItemByIdQuery(id);
   const [updateMenuItem] = useUpdateMenuItemMutation();
 
@@ -96,9 +98,8 @@ function MenuItemUpsert() {
     formData.append("SpecialTag", menuItemInputs.specialTag);
     formData.append("Category", menuItemInputs.category);
     formData.append("Price", menuItemInputs.price);
-
+    
     if (imageToDisplay) formData.append("File", imageToStore);
-
     let response;
 
     if (id) {
@@ -111,7 +112,7 @@ function MenuItemUpsert() {
       response = await createMenuItem(formData);
       toastNotify("Menu Item created successfully", "success");
     }
-    
+
     if (response) {
       setLoading(false);
       navigate("/menuItem/mainList");
@@ -123,12 +124,12 @@ function MenuItemUpsert() {
   return (
     <div className="container border mt-5 p-5 bg-light">
       {loading && <MainLoader />}
-        <h3 className=" px-2 text-success">
+     <h3 className=" px-2 text-success">
         {id ? "Edit Menu Item" : "Add Menu Item"}
       </h3>
       <form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
         <div className="row mt-3">
-        <div className="col-md-7">
+          <div className="col-md-7">
             <input
               type="text"
               className="form-control"
@@ -187,8 +188,8 @@ function MenuItemUpsert() {
               </div>
               <div className="col-6">
                 <a
-                  // onClick={() => navigate(-1)}
-                  onClick={() => navigate("/menuItem/mainList")}
+                  onClick={() => navigate(-1)}
+                  // onClick={() => navigate("/menuItem/mainList")}
                   className="btn btn-secondary form-control mt-3"
                 >
                   Back to Menu Items
@@ -198,7 +199,7 @@ function MenuItemUpsert() {
           </div>
           <div className="col-md-5 text-center">
             <img
-              src={imageToDisplay}
+               src={imageToDisplay}
               style={{ width: "100%", borderRadius: "30px" }}
               alt=""
             />

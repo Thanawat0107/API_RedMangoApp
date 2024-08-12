@@ -3,8 +3,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { cartItemModel, userModel } from "../../models";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
-import { emptyUserState, setLoggedInUser } from "../../Redux/slice/userAuthSlice";
 import { SD_Roles } from "../../Common/SD";
+import { emptyUserState, setLoggedInUser } from "../../Redux/slice/userAuthSlice";
 
 function Header() {
   const dispatch = useDispatch();
