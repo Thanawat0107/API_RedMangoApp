@@ -95,7 +95,7 @@ export default function OrderSummary({ data, userInput }: orderSummaryProps) {
             </div>
           </div>
           <div className="d-flex justify-content-between align-items-center mt-3">
-            <button className="btn btn-secondary" onClick={() => navigate('/order/myOrders')}>
+            <button className="btn btn-secondary" onClick={() => navigate(-1)}>
               Back to Orders
             </button>
             {userData.role == SD_Roles.ADMIN && (

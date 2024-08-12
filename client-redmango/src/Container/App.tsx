@@ -13,10 +13,11 @@ import {
   OrderConfirmed,
   MyOrders,
   OrderDetails,
-  AllOrders
+  AllOrders,
+  MainList
 } from "../Pages";
 import { Route, Routes } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetShoppingCartQuery } from "../Apis/shoppingCartApi";
 import { setShoppingCart } from "../Redux/slice/shoppingCartSlice";
@@ -25,16 +26,18 @@ import { jwtDecode } from "jwt-decode";
 import { setLoggedInUser } from "../Redux/slice/userAuthSlice";
 import { RootState } from "../Redux/store";
 
-
 function App() {
+  const [skip, setSkip] = useState(true);
   const dispatch = useDispatch();
 
   const userData = useSelector((state: RootState) => state.userAuthStore);
 
-  const { data, isLoading } = useGetShoppingCartQuery(userData.id);
+  const { data, isLoading } = useGetShoppingCartQuery(userData.id,{
+    skip: skip,
+  });
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && data) {
       console.log(data.result);
       dispatch(setShoppingCart(data.result?.cartItems));
     }
@@ -47,6 +50,11 @@ function App() {
       dispatch(setLoggedInUser({ fullName, id, email, role }));
     }
   }, []);
+
+  useEffect(() => {
+    //ถ้า userData มีการเปลี่ยนแปลงค่า โดย userData.id มีค่าให้เปลี่ยนสเตทเป็น false
+    if (userData.id) setSkip(false);
+  }, [userData]);
 
   return (
     <div>
@@ -78,6 +86,7 @@ function App() {
           <Route path="/order/myOrders" element={<MyOrders />} />
           <Route path="/order/orderDetails/:id" element={<OrderDetails />} />
           <Route path="/order/allOrders" element={<AllOrders />} />
+          <Route path="/menuItem/mainList" element={<MainList />} />
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </div>

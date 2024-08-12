@@ -48,16 +48,6 @@ function Header() {
                   Home
                 </NavLink>
               </li>
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link"
-                  aria-current="page"
-                  to="/shoppingCart"
-                >
-                  <i className="bi bi-cart"></i>
-                  {userData.id && `(${shoppingCartFromStore.length})`}
-                </NavLink>
-              </li>
 
               {userData.role == SD_Roles.ADMIN ? (
                 <li className="nav-item dropdown">
@@ -71,6 +61,15 @@ function Header() {
                     Admin Panel
                   </a>
                   <ul className="dropdown-menu">
+
+                    <li
+                      style={{ cursor: "pointer" }}
+                      className="dropdown-item"
+                      onClick={() => navigate("menuItem/mainList")}
+                    >
+                      Menu Item
+                    </li>
+
                     <li
                       style={{ cursor: "pointer" }}
                       className="dropdown-item"
@@ -103,6 +102,17 @@ function Header() {
                   </NavLink>
                 </li>
               )}
+
+              <li className="nav-item">
+                <NavLink
+                  className="nav-link"
+                  aria-current="page"
+                  to="/shoppingCart"
+                >
+                  <i className="bi bi-cart"></i>
+                  {userData.id && `(${shoppingCartFromStore.length})`}
+                </NavLink>
+              </li>
 
               <div className="d-flex" style={{ marginLeft: "auto" }}>
                 {userData.id && (
