@@ -2,7 +2,7 @@ import { Footer, Header } from "../Components/Layout";
 import {
   Home,
   MenuItemDetails,
-  NotFound,
+  MenuItemUpsert,
   Payment,
   ShoppingCart,
   Login,
@@ -14,7 +14,8 @@ import {
   MyOrders,
   OrderDetails,
   AllOrders,
-  MainList
+  MainList,
+  NotFound,
 } from "../Pages";
 import { Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -87,6 +88,11 @@ function App() {
           <Route path="/order/orderDetails/:id" element={<OrderDetails />} />
           <Route path="/order/allOrders" element={<AllOrders />} />
           <Route path="/menuItem/mainList" element={<MainList />} />
+          <Route path="/menuItem/menuItemUpsert" element={<MenuItemUpsert />} />
+          <Route
+            path="/menuItem/menuItemUpsert/:id"
+            element={<MenuItemUpsert />}
+          />
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </div>
