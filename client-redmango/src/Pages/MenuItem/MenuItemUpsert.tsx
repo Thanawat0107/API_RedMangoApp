@@ -1,18 +1,26 @@
-import React, { useEffect ,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { inputHelper, toastNotify } from "../../Helper";
 import { useNavigate, useParams } from "react-router-dom";
 import { MainLoader } from "../../Common";
-import { baseUrl } from "../../Common/SD";
-import { 
+import { baseUrl, SD_Categories } from "../../Common/SD";
+import {
   useCreateMenuItemMutation,
-  useGetMenuItemByIdQuery, 
-  useUpdateMenuItemMutation } from "../../Apis/menuItemApi";
+  useGetMenuItemByIdQuery,
+  useUpdateMenuItemMutation,
+} from "../../Apis/menuItemApi";
+
+const Categories = [
+  SD_Categories.APPETIZER,
+  SD_Categories.BEVERAGES,
+  SD_Categories.DESSERT,
+  SD_Categories.ENTREE,
+];
 
 const menuItemData = {
   name: "",
   description: "",
   specialTag: "",
-  category: "",
+  category: Categories[0],
   price: "",
 };
 
@@ -98,7 +106,7 @@ function MenuItemUpsert() {
     formData.append("SpecialTag", menuItemInputs.specialTag);
     formData.append("Category", menuItemInputs.category);
     formData.append("Price", menuItemInputs.price);
-    
+
     if (imageToDisplay) formData.append("File", imageToStore);
     let response;
 
@@ -124,7 +132,7 @@ function MenuItemUpsert() {
   return (
     <div className="container border mt-5 p-5 bg-light">
       {loading && <MainLoader />}
-     <h3 className=" px-2 text-success">
+      <h3 className=" px-2 text-success">
         {id ? "Edit Menu Item" : "Add Menu Item"}
       </h3>
       <form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
@@ -155,14 +163,16 @@ function MenuItemUpsert() {
               value={menuItemInputs.specialTag}
               onChange={handleMenuItemInput}
             />
-            <input
-              type="text"
-              className="form-control mt-3"
-              placeholder="Enter Category"
+            <select
+              className="form-control mt-3 form-select"
               name="category"
               value={menuItemInputs.category}
               onChange={handleMenuItemInput}
-            />
+            >
+              {Categories.map((category, index) => (
+                <option key={index} value={category}>{category}</option>
+              ))}
+            </select>
             <input
               type="number"
               className="form-control mt-3"
@@ -172,12 +182,12 @@ function MenuItemUpsert() {
               value={menuItemInputs.price}
               onChange={handleMenuItemInput}
             />
-             <input
+            <input
               type="file"
               onChange={handleFileChange}
               className="form-control mt-3"
             />
-             <div className="row">
+            <div className="row">
               <div className="col-6">
                 <button
                   type="submit"
@@ -199,7 +209,7 @@ function MenuItemUpsert() {
           </div>
           <div className="col-md-5 text-center">
             <img
-               src={imageToDisplay}
+              src={imageToDisplay}
               style={{ width: "100%", borderRadius: "30px" }}
               alt=""
             />
