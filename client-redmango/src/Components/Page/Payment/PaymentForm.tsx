@@ -9,8 +9,10 @@ import { orderSummaryProps } from "../Order/orderSummaryProps";
 import { cartItemModel, apiResponse } from "../../../models";
 import { useCreateOrderMutation } from "../../../Apis/orderApi";
 import { SD_Status } from "../../../Common/SD";
+import { useNavigate } from "react-router-dom";
 
 const PaymentForm = ({ data, userInput }: orderSummaryProps) => {
+  const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [createOrder] = useCreateOrderMutation();
   const stripe = useStripe();
@@ -93,9 +95,18 @@ const PaymentForm = ({ data, userInput }: orderSummaryProps) => {
             : SD_Status.PENDING,
       });
 
-      console.log(response);
+      if (response) {
+        if (response.data?.result.status === SD_Status.CONFIRMED) {
+          navigate(
+            `/order/orderConfirmed/${response.data.result.orderHeaderId}}`
+          );
+        } else {
+          navigate("/failed");
+        }
+      }
 
     } //ปีกกาของ else
+    setIsProcessing(false);
   };
 
   return (
