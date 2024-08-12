@@ -4,6 +4,7 @@ import { cartItemModel, userModel } from "../../models";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { emptyUserState, setLoggedInUser } from "../../Redux/slice/userAuthSlice";
+import { SD_Roles } from "../../Common/SD";
 
 function Header() {
   const dispatch = useDispatch();
@@ -58,47 +59,50 @@ function Header() {
                 </NavLink>
               </li>
 
-              <li className="nav-item">
-                <NavLink
-                  className="nav-link"
-                  aria-current="page"
-                  to="/order/myorders"
-                >
-                  Orders
-                </NavLink>
-              </li>
-
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Admin panel
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Action
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Another action
-                    </a>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Something else here
-                    </a>
-                  </li>
-                </ul>
-              </li>
+              {userData.role == SD_Roles.ADMIN ? (
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Admin Panel
+                  </a>
+                  <ul className="dropdown-menu">
+                    <li
+                      style={{ cursor: "pointer" }}
+                      className="dropdown-item"
+                      onClick={() => navigate("order/myorders")}
+                    >
+                      My Orders
+                    </li>
+                    <li
+                      style={{ cursor: "pointer" }}
+                      className="dropdown-item"
+                      onClick={() => navigate("order/allOrders")}
+                    >
+                      All Orders
+                    </li>
+                    <li>
+                      <a className="dropdown-item" href="#">
+                        Something else here
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              ) : (
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    aria-current="page"
+                    to="/order/myorders"
+                  >
+                    Orders
+                  </NavLink>
+                </li>
+              )}
 
               <div className="d-flex" style={{ marginLeft: "auto" }}>
                 {userData.id && (
