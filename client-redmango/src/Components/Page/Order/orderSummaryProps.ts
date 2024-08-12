@@ -1,4 +1,4 @@
-import { shoppingCartModel } from "../../../mod";
+import { shoppingCartModel } from "../../../models";
 
 export interface orderSummaryProps {
     data: {
