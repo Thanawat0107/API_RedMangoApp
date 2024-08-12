@@ -20,7 +20,7 @@ namespace API_RedMango.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApiResponse>> GetShoppingCart(string? userId)
+        public async Task<ActionResult<ApiResponse>> GetShoppingCart(string userId)
         {
             try
             {
