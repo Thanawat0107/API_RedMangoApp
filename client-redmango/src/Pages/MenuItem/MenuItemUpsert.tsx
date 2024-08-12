@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { inputHelper, toastNotify } from "../../Helper";
-import { useCreateMenuItemMutation, useGetMenuItemByIdQuery } from "../../Apis/menuItemApi";
+import { useCreateMenuItemMutation, useGetMenuItemByIdQuery, useUpdateMenuItemMutation } from "../../Apis/menuItemApi";
 import { useNavigate, useParams  } from "react-router-dom";
 import { MainLoader } from "../../Common";
 import { baseUrl } from "../../Common/SD";
@@ -24,6 +24,7 @@ function MenuItemUpsert() {
   const [menuItemInputs, setMenuItemInputs] = useState(menuItemData);''
 
   const { data } = useGetMenuItemByIdQuery(id);
+  const [updateMenuItem] = useUpdateMenuItemMutation();
 
   useEffect(() => {
     if (data && data.result) {
@@ -82,7 +83,7 @@ function MenuItemUpsert() {
     e.preventDefault();
     setLoading(true);
 
-    if (!imageToStore) {
+    if (!imageToStore && !id) {
       toastNotify("Please upload an image", "error");
       setLoading(false);
       return;
@@ -95,9 +96,22 @@ function MenuItemUpsert() {
     formData.append("SpecialTag", menuItemInputs.specialTag);
     formData.append("Category", menuItemInputs.category);
     formData.append("Price", menuItemInputs.price);
-    formData.append("File", imageToStore);
 
-    const response = await createMenuItem(formData);
+    if (imageToDisplay) formData.append("File", imageToStore);
+
+    let response;
+
+    if (id) {
+      //update
+      formData.append("Id", id);
+      response = await updateMenuItem({ data: formData, id });
+      toastNotify("Menu Item updated successfully", "success");
+    } else {
+      //create
+      response = await createMenuItem(formData);
+      toastNotify("Menu Item created successfully", "success");
+    }
+    
     if (response) {
       setLoading(false);
       navigate("/menuItem/mainList");
@@ -109,7 +123,9 @@ function MenuItemUpsert() {
   return (
     <div className="container border mt-5 p-5 bg-light">
       {loading && <MainLoader />}
-      <h3 className="px-2 text-success">Add Menu Item</h3>
+        <h3 className=" px-2 text-success">
+        {id ? "Edit Menu Item" : "Add Menu Item"}
+      </h3>
       <form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
         <div className="row mt-3">
         <div className="col-md-7">
@@ -166,12 +182,13 @@ function MenuItemUpsert() {
                   type="submit"
                   className="btn btn-success form-control mt-3"
                 >
-                  Submit
+                  {id ? "Update" : "Create"}
                 </button>
               </div>
               <div className="col-6">
                 <a
-                  onClick={() => navigate(-1)}
+                  // onClick={() => navigate(-1)}
+                  onClick={() => navigate("/menuItem/mainList")}
                   className="btn btn-secondary form-control mt-3"
                 >
                   Back to Menu Items
