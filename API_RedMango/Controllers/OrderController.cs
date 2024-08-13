@@ -2,7 +2,6 @@
 using API_RedMango.Models;
 using API_RedMango.Models.Dto;
 using API_RedMango.Utility;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -13,6 +12,7 @@ namespace API_RedMango.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
+
         private readonly ApplicationDbContext _db;
         private ApiResponse _response;
         public OrderController(ApplicationDbContext db)
@@ -22,11 +22,11 @@ namespace API_RedMango.Controllers
         }
 
         [HttpGet] //ลูกค้าหนึ่งคนสั่งได้หลาย order
-        public async Task<ActionResult<ApiResponse>> GetOrders(string? userId)
+        public async Task<ActionResult<ApiResponse>> GetOrders(string? userId, string? searchString, string? status)
         {
             try
             {
-                var orderHeaders = _db.OrderHeaders.Include(u => u.OrderDetails)
+                IEnumerable<OrderHeader> orderHeaders = _db.OrderHeaders.Include(u => u.OrderDetails)
                     .ThenInclude(u => u.MenuItem)
                     .OrderByDescending(u => u.OrderHeaderId);
 
@@ -34,9 +34,19 @@ namespace API_RedMango.Controllers
                 {
                     _response.Result = orderHeaders.Where(u => u.ApplicationUserId == userId);
                 }
-                else
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    orderHeaders = orderHeaders
+                        .Where(u => u.PickupPhoneNumber.ToLower().Contains(searchString.ToLower()) ||
+                    u.PickupEmail.ToLower().Contains(searchString.ToLower())
+                    || u.PickupName.ToLower().Contains(searchString.ToLower()));
+                }
+
+                if (!string.IsNullOrEmpty(status))
                 {
                     _response.Result = orderHeaders;
+                    orderHeaders = orderHeaders.Where(u => u.Status.ToLower() == status.ToLower());
                 }
 
                 _response.StatusCode = HttpStatusCode.OK;
@@ -84,6 +94,7 @@ namespace API_RedMango.Controllers
             }
             return _response;
         }
+
 
         [HttpPost]
         public async Task<ActionResult<ApiResponse>> CreateOrder([FromBody] OrderHeaderCreateDTO orderHeaderDTO)
@@ -136,6 +147,7 @@ namespace API_RedMango.Controllers
             }
             return _response;
         }
+
 
         [HttpPut("{id:int}")]
         public async Task<ActionResult<ApiResponse>> UpdateOrderHeader(int id, [FromBody] OrderHeaderUpdateDTO orderHeaderUpdateDTO)
@@ -191,5 +203,6 @@ namespace API_RedMango.Controllers
             }
             return _response;
         }
+
     }
 }
