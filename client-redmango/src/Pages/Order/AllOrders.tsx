@@ -3,9 +3,8 @@ import { useGetAllOrdersQuery } from "../../Apis/orderApi";
 import OrderList from "../../Components/Page/Order/OrderList";
 import { MainLoader } from "../../Common";
 import { SD_Status } from "../../Common/SD";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { inputHelper } from "../../Helper";
-import { orderHeaderModel } from "../../models";
 
 const filterOptions = [
   "All",
@@ -17,8 +16,19 @@ const filterOptions = [
 
 function AllOrders() {
   const [orderData, setOrderData] = useState([]);
-  const { data, isLoading } = useGetAllOrdersQuery("");
   const [filters, setFilters] = useState({ searchString: "", status: "" });
+
+  const [apiFilters, setApiFilters] = useState({
+    searchString: "",
+    status: "",
+  });
+
+  const { data, isLoading } = useGetAllOrdersQuery({
+    ...(apiFilters && {
+      searchString: apiFilters.searchString,
+      status: apiFilters.status,
+    }),
+  });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -28,24 +38,10 @@ function AllOrders() {
   };
 
   const handleFilters = () => {
-    const tempData = data.result.filter((orderData: orderHeaderModel) => {
-      if (
-        (orderData.pickupName &&
-          orderData.pickupName.includes(filters.searchString)) ||
-        (orderData.pickupEmail &&
-          orderData.pickupEmail.includes(filters.searchString)) ||
-        (orderData.pickupPhoneNumber &&
-          orderData.pickupPhoneNumber.includes(filters.searchString))
-      ) {
-        return orderData;
-      }
+    setApiFilters({
+      searchString: filters.searchString,
+      status: filters.status,
     });
-
-    const finalArray = tempData.filter((orderData: orderHeaderModel) =>
-      filters.status !== "" ? orderData.status === filters.status : orderData
-    );
-
-    setOrderData(finalArray);
   };
 
   useEffect(() => {
@@ -58,7 +54,7 @@ function AllOrders() {
     <>
       {isLoading && <MainLoader />}
       {!isLoading && (
-        <>
+         <>
           <div className="d-flex align-items-center justify-content-between mx-5 mt-5">
             <h1 className="text-success">Orders List</h1>
             <div className="d-flex" style={{ width: "40%" }}>
@@ -69,12 +65,12 @@ function AllOrders() {
                 name="searchString"
                 onChange={handleChange}
               />
-              <select
+                <select
                 className="form-select w-50 mx-2"
                 onChange={handleChange}
                 name="status"
               >
-                {filterOptions.map((item, index) => (
+                 {filterOptions.map((item, index) => (
                   <option key={index} value={item === "All" ? "" : item}>
                     {item}
                   </option>
